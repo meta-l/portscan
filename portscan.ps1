@@ -18,7 +18,7 @@ Apply a delay of x milliseconds before attempting next TCPClient connection
 .EXAMPLE
 .\portscan.ps1 127.0.0.1,127.0.0.4 445 (Scan port 445 on IP addresses 127.0.0.1 - 127.0.0.4)
 .EXAMPLE
-.\portscan.ps1 127.0.0.1 445,3389,23 -random -resolve (Scan ports 23,445,3389 on IP 127.0.0.1 randomly and resolve the IPs4)
+.\portscan.ps1 127.0.0.1 445,3389,23 -random -resolve (Scan ports 23,445,3389 on IP 127.0.0.1 randomly and resolve the IPs)
 .EXAMPLE
 .\portscan.ps1 127.0.0.1 445,450 -portRange (Scan ports 445 through 450 inclusive on 127.0.0.1)
 .NOTES
