@@ -36,7 +36,7 @@ Version: 0.6_5
 *0.6_4: Might be interesting to randomise delay time between 0 and given delay. Then again, it might not :P
 *0.6_5: File of IP addresses
 Roadmap 0_6_6: Graceful errors if no IP addresses entered, rather than the red text of powershell failure
-Roadmap 0.7: rate adjustment + jobs
+Roadmap 0.7: rate adjustment + jobs - jobs too intensive, will look at runspaces
 Roadmap 0.8: output formatting
 Roadmap 0.9: get banners/versions
 Roadmap 0.9_5: Presume could do away with port exist if statement using parameter validation? Investigate
