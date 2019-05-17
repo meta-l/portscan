@@ -71,9 +71,7 @@ function makeRange {
   Get-Content $inFile | ForEach-Object {
   [system.net.ipaddress[]]$ipArrayFromFile = Get-Content $inFile
   $StartIPAddress = $ipArrayFromFile[0]
-  Write-Debug "`$StartIPAddress is $StartIPAddress"
   $EndIPAddress = $ipArrayFromFile[-1]
-  write-debug "`$EndIPAddress is $EndIPAddress"
   }
  }
  # Generate range of IPs, or just return a single IP if only one specified on command line
@@ -170,7 +168,6 @@ function doConnectRandom {
    Write-Progress -Activity "Scan range $StartIPaddress - $EndIPAddress" -Status "% Complete:" -PercentComplete(($loopcount/($randomIP.Length*$rPortArray.Length))*100)
    $loopcount++
    if($delay) {$delay = Get-Random -maximum 1000 -Minimum 1; Start-Sleep -m $delay}
-   write-debug "`$delay is $delay"
    $socket = New-Object System.Net.Sockets.TcpClient
    $socket.Connect($rIP,$rPort)
    if ($socket.Connected) {
