@@ -28,7 +28,7 @@ Defaults to 'Normal', if priority switch is used, makes process 'High' priority.
 .EXAMPLE
 .\portscan.ps1 -infile .\targets.txt -portrange 445,450 (Scan ports 445 through 450 inclusive on hosts specified in targets.txt)
 .NOTES
-Version: 0.7_1
+Version: 0.7_4
 *0.1: Accept command line parameters, validate IP addresses. Thanks to @darkoperator for validation tip
 *0.2: detect single IP or scan range, iterate accordingly
 *0.3: detect single port or range, iterate accordingly
@@ -42,6 +42,7 @@ Version: 0.7_1
 *0.7_1: Threads!
 *0.7_2: rate adjustment (specify number of threads.)
 *0.7_3: Added priority switch
+*0.7_4: Added infopane when started
 Roadmap 0.8: output formatting
 Roadmap 0.9: get banners/versions
 #>
@@ -75,13 +76,11 @@ function makeRange {
  $ScanIPRange = @()
  # Check for file specified on command line, populate IPAddress vars
  if($inFile) {
-  write-debug "`$infile is $inFile"
   Get-Content $inFile | ForEach-Object {
   [system.net.ipaddress[]]$ipArrayFromFile = Get-Content $inFile
 
   
   }
-  write-debug "`$iparrayfromfile is $ipArrayFromFile"
   return $ipArrayFromFile  
  }
  # Generate range of IPs, or just return a single IP if only one specified on command line
@@ -134,7 +133,7 @@ Write-Host "{*}=======Resolving=======" -ForegroundColor Magenta
   $hName = $null
   $hName = [System.Net.Dns]::GetHostEntry($rIP).Hostname
   if ($hName) {
-   Write-Host $rIP resolves to $hName -ForegroundColor Green }
+   Write-Host $rIP resolves to $hName.ToUpper() -ForegroundColor Green }
   else {
    Write-Host $rIP does not resolve -ForegroundColor Red }
  }
@@ -161,8 +160,6 @@ function doConnect {
   $useThreads = $threads}
  else {
   $useThreads = $env:NUMBER_OF_PROCESSORS}
- write-debug "Number of threads to use is $useThreads"
- $infoDisplay = 
  $pool = [RunspaceFactory]::CreateRunspacePool(1, [int]$env:NUMBER_OF_PROCESSORS + 1)
  $pool.ApartmentState = "MTA"
  $pool.Open()
@@ -170,6 +167,16 @@ function doConnect {
  # set higher priority for powershell process
  if($priority) {$proc = Get-Process -Id $pid; $proc.PriorityClass = 'High'}
  else{$proc = Get-Process -Id $pid; $proc.PriorityClass = 'Normal'}
+
+ # info object
+ $infoDisplay = @{
+  InputFile = $inFile
+  ;Target_IPs = $ipArray
+  ;Target_Ports = $portArray
+  ;Process_Priority = $proc.PriorityClass
+  ;Threads = $useThreads
+  }
+  [pscustomobject]$infoDisplay
  # set up scriptblock to pass to runspaces
  $scriptblock = {
   Param (
