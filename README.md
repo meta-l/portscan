@@ -38,6 +38,6 @@ Version: 0.7_1
 *0.6_2: Fixed single ports
 *0.6_3: Added scan delay. Kind of a bodge until jobs are in place.
 *0.6_4: Might be interesting to randomise delay time between 0 and given delay. Then again, it might not :P
-*0.6_5: File of IP addresses
+*0.6_5: File of IP addresses.
 *0.7_1: Threads!
 *0.7_2: rate adjustment (specify number of threads.)
