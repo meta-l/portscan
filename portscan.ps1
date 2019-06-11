@@ -18,7 +18,9 @@ Attempt to use DNS to resolve IP address (much slower)
 .PARAMETER delay
 Apply a delay of 1-1000 milliseconds before attempting next TCPClient connection
 .PARAMETER threads
-DEfaults of number of processors on the host running the script, can specify any number. Advise no more than 20.
+Defaults of number of processors on the host running the script, can specify any number. Advise no more than 20.
+.PARAMETER priority
+Defaults to 'Normal', if priority switch is used, makes process 'High' priority.
 .EXAMPLE
 .\portscan.ps1 -ipaddress 127.0.0.1,127.0.0.4 -ports 445 (Scan port 445 on IP addresses 127.0.0.1 - 127.0.0.4)
 .EXAMPLE
@@ -39,6 +41,7 @@ Version: 0.7_1
 *0.6_5: File of IP addresses
 *0.7_1: Threads!
 *0.7_2: rate adjustment (specify number of threads.)
+*0.7_3: Added priority switch
 Roadmap 0.8: output formatting
 Roadmap 0.9: get banners/versions
 #>
@@ -50,6 +53,7 @@ Param(
  ,[Parameter(Mandatory=$true,Position = 1)][Int[]]$ports
  ,[Parameter(Mandatory=$true,ParameterSetName="file")]$inFile
  ,[int]$threads
+ ,[switch]$priority
  ,[Switch]$randomise
  ,[Switch]$portRange
  ,[Switch]$resolve
@@ -163,6 +167,9 @@ function doConnect {
  $pool.ApartmentState = "MTA"
  $pool.Open()
  $runspaces = @()
+ # set higher priority for powershell process
+ if($priority) {$proc = Get-Process -Id $pid; $proc.PriorityClass = 'High'}
+ else{$proc = Get-Process -Id $pid; $proc.PriorityClass = 'Normal'}
  # set up scriptblock to pass to runspaces
  $scriptblock = {
   Param (
