@@ -9,8 +9,6 @@ Examples:
 
 .\portscan.ps1 -ipaddress 127.0.0.1,127.0.0.4 -ports 445
 
-
 .\portscan.ps1 -ipaddress 127.0.0.1 -ports 445,3389,23 -randomise -resolve
-
 
 .\portscan.ps1 -infile .\targets.txt -portrange 445,450 -threads 10
