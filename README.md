@@ -6,6 +6,7 @@ Ver: 0.7.1
 Can take a file of IPs, a list of ports, a range of ports and IPs, can randomise the order of ports and IPs, can resolve IPs, can introduce a (pseudo)random delay between 0 and 1000ms, uses threads (runspaces). Threads default to number of cores, can specify more or less.
 
 Examples:
+
 .\portscan.ps1 -ipaddress 127.0.0.1,127.0.0.4 -ports 445
 
 
