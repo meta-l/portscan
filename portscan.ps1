@@ -67,7 +67,10 @@ $DebugPreference = "Continue"
 $StartIPAddress, $EndIPAddress = $IPAddress
 $startPort, $endPort = $ports
 
-
+# outfile stuff
+$workingdir = "H:\Scripts\RedTeaming"
+$datefile = (Get-Date).ToString("dd-MM-yyyy") + "_results.txt"
+$outfile = "$workingdir\$datefile"
 #endregion Initialisation
 
 #region Process
@@ -149,9 +152,8 @@ function doConnect {
  if($randomise) {
   $ipArray = makeRange | Sort-Object {Get-Random}
   $portArray = makePortRange | Sort-Object {Get-Random}
- }
- # Connects to IPs in order
- else {
+ } else {
+  # Connects to IPs in order
   $ipArray = makeRange
   $portArray = makePortRange
  }
@@ -159,8 +161,8 @@ function doConnect {
  if($threads) {
   $useThreads = $threads}
  else {
-  $useThreads = $env:NUMBER_OF_PROCESSORS}
- $pool = [RunspaceFactory]::CreateRunspacePool(1, [int]$env:NUMBER_OF_PROCESSORS + 1)
+  $useThreads = ([int]$env:NUMBER_OF_PROCESSORS + 1)}
+ $pool = [RunspaceFactory]::CreateRunspacePool(1, $useThreads)
  $pool.ApartmentState = "MTA"
  $pool.Open()
  $runspaces = @()
@@ -190,10 +192,12 @@ function doConnect {
    $socket.Connect($sb_ip,$sb_Port)
   if ($socket.Connected) {
    #Write-Host $sb_ip $sb_Port -ForegroundColor Green -Separator " ==> "}
-   Write-Output "Connected to $sb_port on $sb_ip" }
-  else {
+   Write-Output "Connected to $sb_port on $sb_ip"}
+   #Write-Output "Connected to $sb_port on $sb_ip" | Tee-Object -FilePath $workingdir\$datefile}
+   #Write-Output "Connected to $sb_port on $sb_ip" | Out-File H:\Scripts\RedTeaming\results.txt}
+  <#else {
    #Write-Host $sb_ip $sb_Port -ForegroundColor red -Separator " - {!} cannot open socket on port "}
-   Write-Output "Failed to connect to port $sb_port on $sb_ip" }
+   Write-Output "Failed to connect to port $sb_port on $sb_ip"}#>
    $socket.Close()
   }
   
